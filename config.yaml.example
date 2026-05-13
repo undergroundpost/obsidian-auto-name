@@ -1,0 +1,58 @@
+# Configuration template for obsidian-auto-name.
+# Copy this file to config.yaml and edit for your environment.
+# config.yaml is gitignored so personal paths and addresses stay local.
+
+# Folder settings
+INPUT_FOLDER: "/path/to/your/obsidian/vault"
+
+# Folders to exclude from scanning
+EXCLUDE_FOLDERS:
+  - "/path/to/your/obsidian/vault/AI"
+  - "/path/to/your/obsidian/vault/Extras"
+
+# LLM Provider settings
+LLM_PROVIDER: "ollama"                             # Currently only "ollama" is supported
+OLLAMA_MODEL: "qwen2.5:7b"                         # Title-generation model
+OLLAMA_SERVER_ADDRESS: "http://localhost:11434"    # Ollama server address
+OLLAMA_CONTEXT_WINDOW: 32000
+
+# Filename patterns that trigger renaming. Each entry is a literal basename;
+# the script automatically appends an optional " N" digit suffix when matching.
+# Defaults cover Obsidian's two auto-generated note conventions. Add more
+# entries if your workflow creates other untitled-style names (e.g. "Inbox Item").
+RENAME_PATTERNS:
+  - "Untitled"
+  - "New Note"
+
+# Title generation
+MAX_TITLE_WORDS: 3                                 # Hard cap on words in the generated title
+TITLE_CASE: "title"                                # title | sentence | lower
+
+# Filename template. {title} is the generated/extracted title; {date} is the
+# file's modification date (YYYY-MM-DD). Leave as "{title}" for plain naming.
+# Examples:
+#   TITLE_TEMPLATE: "{date} {title}"        # "2026-05-13 Q3 Sales Meeting"
+#   TITLE_TEMPLATE: "{title} ({date})"      # "Q3 Sales Meeting (2026-05-13)"
+#   TITLE_TEMPLATE: "Inbox - {title}"       # "Inbox - Q3 Sales Meeting"
+TITLE_TEMPLATE: "{title}"
+
+# Confidence threshold for the LLM-generated title. If the model returns a
+# confidence below this, the script falls back to the note's first non-empty
+# line as the title (Notion-style). 0.5 is a sensible default.
+CONFIDENCE_THRESHOLD: 0.5
+
+# Hard cap on the final filename (excluding the .md extension). Defensive
+# truncation, applied at the last word boundary. Set to 0 to disable.
+MAX_FILENAME_CHARS: 50
+
+# Frontmatter opt-out: notes containing `<KEY>: false` are skipped. Set to an
+# empty string to disable the opt-out entirely. Users put e.g. `auto_name: false`
+# in a note's frontmatter to leave it alone forever.
+OPT_OUT_FRONTMATTER_KEY: "auto_name"
+
+# Empty-note cleanup
+DELETE_EMPTY_UNTITLED: true                        # Delete truly empty Untitled notes
+EMPTY_NOTE_BODY_MIN_CHARS: 1                       # Body shorter than this counts as empty (1 = only delete 0-char bodies)
+
+# Age filter (0 = no filter, rename Untitled notes of any age)
+MAX_NOTE_AGE_DAYS: 0
